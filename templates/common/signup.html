@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/common/login.css' %}">
+
+<main>
+    <div class="container">
+        <div class="login_box">
+            <div class="login_title">회원가입</div>
+            <div class="login_form">
+                <form method="post" action="{% url 'common:signup' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% include "form_errors.html" %}
+                    <div class="mb-3">
+                        <label for="username">사용자 ID</label>
+                        <input placeholder="Id" type="text" class="form-control" name="username" id="username"
+                               value="{{ form.username.value|default_if_none:'' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password1">비밀번호</label>
+                        <input placeholder="Password" type="password" class="form-control" name="password1" id="password1"
+                               value="{{ form.password1.value|default_if_none:'' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password2">비밀번호 확인</label>
+                        <input placeholder="Password Check" type="password" class="form-control" name="password2" id="password2"
+                               value="{{ form.password2.value|default_if_none:'' }}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="frist_name">성</label>
+                        <input placeholder="Frist Name" type="frist_name" class="form-control" name="frist_name" id="frist_name"
+                               value="{{ form.frist_name.value|default_if_none:'' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="last_name">이름</label>
+                        <input placeholder="Last Name" type="last_name" class="form-control" name="last_name" id="last_name"
+                               value="{{ form.last_name.value|default_if_none:'' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email">이메일</label>
+                        <input placeholder="Email" type="text" class="form-control" name="email" id="email"
+                               value="{{ form.email.value|default_if_none:'' }}">
+                    </div>
+                    <div class="mb-3">
+                        <input placeholder="Profile" type="file" name="profile_image" id="profile_image">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="button_submit">생성하기</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% load custom_date %}
+{% load diary_filter %}
+{% load static %}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+<script src="{% static 'js/calendar/calendar.js' %}"></script>
+<script src="{% static 'js/calender/reserve.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/diary/diary_list.css' %}">
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+<main>
+    <div class="container">
+        <div class="calendar">
+            <form action="{% url 'diary:diary_list' %}" id="myForm">
+                <div class="calendar_header">
+                    <div class="ym-wrapper">
+                        <span class="year"></span>년
+                        <span class="month"></span>월
+                    </div>
+                    <div class="calendar_nav">
+                        <div class="nav-btn go-prev">&lt;</div>
+                        <div class="nav-btn go-today"><a href="#" onClick="history.go(0)">오늘</a> </div>
+                        <div class="nav-btn go-next">&gt;</div>
+                    </div>
+                </div>
+                <div class="calendar_main">
+                    <div class="days">
+                        <div class="day">일</div>
+                        <div class="day">월</div>
+                        <div class="day">화</div>
+                        <div class="day">수</div>
+                        <div class="day">목</div>
+                        <div class="day">금</div>
+                        <div class="day">토</div>
+                    </div>
+                    <div class="dates"></div>
+                </div>
+            </form>
+            
+        </div>
+
+    </div>
+</main>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function(){
+        // var diaryListURL = "{% url 'diary:diary_list' %}";
+        $('.dates').on('click', '.date',function(){
+            $(this).addClass('click_date');
+            $('.date').not(this).removeClass('click_date');
+            $('.other').removeClass('click_date');
+
+            var year = $('.ym-wrapper .year').text()
+            var month = $('.ym-wrapper .month').text()
+            var day = $(this).find('.date-itm').text().split('\n')[1].split(' ')[24]
+
+            var diaryListURL = '/diary/?year=' + year + '&month=' + month + '&day=' + (Number(day));
+
+            // GET 요청 보내기
+            $.ajax({
+                type: "GET",
+                url: diaryListURL,
+                success: function(response) {
+                    window.location.href = diaryListURL;
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log('GET 요청이 실패했습니다.');
+                    console.log(xhr, errmsg, err);
+                }
+            });
+
+
+
+        })
+        var requests = [];
+        var dates = [];
+        var date_counts = [];
+
+        var year = $('.ym-wrapper .year').text()
+        var month = $('.ym-wrapper .month').text()
+        $('.date-itm').each(function() {
+            var day = $(this).text().trim();
+            // var diaryListURL = '/diary_ajax/?year=' + year + '&month=' + month + '&day=' + day;
+
+            // 각 날짜마다 AJAX 요청을 보냄
+            var request = $.ajax({
+                type: "GET",
+                url: '/diary_ajax/',
+                data: {
+                    'year': year,
+                    'month': month,
+                    'day': day
+                },
+                dataType: 'json'
+            });
+
+            requests.push(request);
+
+        });
+
+        $.when.apply($, requests).then(function() {
+            let dateCounts = {};
+            for (let i = 0; i < arguments.length; i++) {
+                let res = arguments[i][0];
+                if (res.length >= 1) {
+                    for (item of res) {
+                        let date = item.create_date.split('T')[0];
+                        dateCounts[date] = (dateCounts[date] || 0) + 1;
+                    }
+                }
+            }
+
+            let totalDateCount = 0;
+            for (let date in dateCounts) {
+                totalDateCount += dateCounts[date];
+                dates.push(date);
+            }
+            date_counts.push(totalDateCount);
+            processData(dates, date_counts);
+        }, function() {
+            console.log('하나 이상의 AJAX 요청이 실패했습니다.');
+        });
+
+
+        $('.nav-btn').on('click',function(){
+            processData(dates, date_counts);
+        })
+
+    })
+
+</script>
+{% endblock %}

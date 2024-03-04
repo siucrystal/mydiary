@@ -1,0 +1,72 @@
+body {
+    margin: 0;
+    font-family: 'ScoreDream';
+    color: #333;
+}
+
+.best_ul,
+.list_ul {
+    display: flex;
+    flex-direction: column;
+}
+.best_ul li,
+.list_ul li {
+    font-size: 14px;
+    /* background: #ddd; */
+    padding: 0 10px;
+    box-sizing: border-box;
+    /* border-radius: 10px; */
+    border-bottom: 1px solid #ddd;
+    background-color: transparent;
+}
+.best_ul li:hover,
+.list_ul li:hover {
+    border-bottom: 1px solid #A2D2FF;
+    background-color: #F4FAFF;
+}
+.best_ul li a,
+.list_ul li a {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px 0;
+    box-sizing: border-box;
+    font-weight: 500;
+}
+.page-item {
+    background-color: transparent;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+.page-item.active {
+    background-color: #A2D2FF;
+}
+
+.pagination {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+}
+
+.create_diary_btn {
+    padding: 10px 20px;
+    box-sizing: border-box;
+    background: #CDB4DB; /* #a2d2ff */
+    font-weight: 500;
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .best_ul li, .list_ul li {
+        padding: 0 0;
+    }
+    .create_diary_btn {
+        width: 100%;
+        border-radius: 3px;
+    }
+}

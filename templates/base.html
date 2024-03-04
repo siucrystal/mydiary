@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>하루하루</title>
+    {% load static %}
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link href="https://webfontworld.github.io/SCoreDream/SCoreDream.css" rel="stylesheet">
+    <script src="{% static 'js/base.js' %}"></script>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="logo_box">
+            <a href="{% url 'diary:index' %}">
+                <img src="{% static 'img/common/logo.png' %}" alt="">
+            </a>
+        </div>
+        <ul class="menu_box">
+            <li><a href="{% url 'common:mypage' %}">나의 하루</a></li>
+            <li><a href="{% url 'diary:diary_every' %}">모두의 하루</a></li>
+            <li>
+                {% if user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'common:logout' %}">{{ user.first_name }}{{ user.last_name }} (로그아웃)</a>
+                {% else %}
+                    <a href="{% url 'common:login' %}">로그인</a>
+                {% endif %}
+            </li>
+            <li>
+                {% if not user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'common:signup' %}">회원가입</a>
+                {% endif %}
+            </li>
+        </ul>
+        
+        <!-- 햄버거버튼 (모바일 일때만 보이도록) -->
+        <div class="ham_box">
+            <div class="ham_icon_box ham">
+                <span class="ham_line ham_top"></span>
+                <span class="ham_line ham_center"></span>
+                <span class="ham_line ham_bottom"></span>            
+            </div>
+            
+            <div class="ham_menu_box">
+                <ul class="ham_ul">
+                    <li class="my_content">
+                        <a href="{% url 'common:mypage' %}">
+                            <div class="my_name">{{ user.first_name }}{{ user.last_name }} 님</div>
+    
+                            <!-- <div class="my_name">로그인 해주세요</div> -->
+                        </a>
+                    </li>
+                    <li class="ham_li"><a href="{% url 'common:mypage' %}">나의 하루</a></li>
+                    <li class="ham_li"><a href="{% url 'diary:diary_every' %}">모두의 하루</a></li>
+                    <li class="ham_li">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'common:logout' %}">{{ user.first_name }}{{ user.last_name }} (로그아웃)</a>
+                        {% else %}
+                            <a href="{% url 'common:login' %}">로그인</a>
+                        {% endif %}
+                    </li>
+                    <li class="ham_li">
+                        {% if not user.is_authenticated %}
+                            <a href="{% url 'common:signup' %}">회원가입</a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+{% block content %}
+{% endblock %}
+
+<footer>
+    <div class="container">
+        <a href="#">하루하루</a>
+    </div>
+</footer>
+
+
+<!-- 자바스크립트 Start -->
+{% block script %}
+{% endblock %}
+<!-- 자바스크립트 End -->
+
+</body>
+</html>

@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+<link rel="stylesheet" href="{% static 'css/diary/diary_detail.css' %}">
+    <main>
+        <div class="container">
+            <div class="diary_detail_box">
+                <h1>{{ diary.title }}</h1>
+                <div class="content_box">
+                    <input type="hidden" name="disclose" value="{{ diary.disclose }}">
+                    <div class="diary_id" id="{{ diary.diary_id }}"></div>
+                    <div class="error_box">
+                        {% if messages %}
+                            <div class="alert alert-danger" role="alert">
+                        {% for message in messages %}
+                                <div class="alert_inner">
+                                    <strong>{{ message.tags }}</strong>
+                                    <span>{{ message.message }}</span>
+                                </div>
+                        {% endfor %}
+                            </div>
+                        {% endif %}
+                        <!-- 넌필드 오류 -->
+                        {% for error in form.non_field_errors %}
+                        <div style="background: #e3f7fc;
+                                    padding: 10px 20px;
+                                    box-sizing: border-box;
+                                    border-radius: 10px;
+                                    border: 2px solid #b9e7f9;
+                                    text-align: center;
+                                    color: #555555;
+                                    font-size: 15px;">
+                            <strong style="color: #03a9f4;">{{ error }}</strong>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="date_user_box">
+                        <div class="user_box">
+                            <div class="user_photo">
+                                {% if image_path   %}
+                                <!-- <img src="{{image_path }}" alt="Profile Image" style="max-width: 200px; max-height: 200px;"><br><br> -->
+                                <div class="user_photo_background" style="background: url({{image_path }}); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
+                                {% else %}
+                                <div class="user_photo_background" style="background: url({% static 'img/common/default_image.png' %}); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
+                                {% endif %}
+                            </div>
+                            <div class="user_name">{{ diary.author.username }}</div>
+                        </div>
+                        <div class="date_box previous_day" id="{{ previous_day|date:'Y.m.d' }}">{{ previous_day|date:"Y.m.d" }}</div> <br><br>
+                        {% if diary.modify_date %}
+                            <div class="date_box modify_date">{{ diary.modify_date|date:"Y.m.d" }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="ext_box">
+                        <div class="text_box">
+                            <span>날씨</span>
+                            <span>{{ diary.weather }}</span> 
+                        </div>
+                        <div class="text_box">
+                            <span>기분</span>
+                            <span>{{ diary.mood }}</span>
+                            
+                        </div>
+                    </div>
+
+                    <div class="main_content_box">
+                        <div class="main_photo">
+                            {% if diary.photo %}
+                                <div class="img" style="background: url({{ diary.photo.url }}); background-position: center; background-size: cover; background-repeat: no-repeat;"></div>
+                            {% else %}
+                                <div></div>
+                            {% endif %}
+                        </div>
+                        <div class="main_text">{{ diary.content|linebreaksbr }}</div>
+                    </div>
+                    
+                    <div class="today_ext_box">
+                        <div>
+                            <span>오늘의 반성</span>
+                            {% if diary.reflection %}
+                                <span>{{ diary.reflection|linebreaksbr }}</span>
+                            {% else %}
+                                <span style="color: #ddd; text-align: center;">Nothing</span>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <span>오늘의 칭찬</span>
+                            {% if diary.praise %}
+                                <span>{{ diary.praise|linebreaksbr }}</span>
+                            {% else %}
+                                <span style="color: #ddd; text-align: center;">Nothing</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="btns_box">
+                        <a href="javascript:void(0)" data-uri="{% url 'diary:diary_vote' diary.diary_id  %}"
+                            class="recommend"> 추천
+                            <span>{{diary.voter.count}}</span>
+                        </a>
+                        <div class="update_btn_box">
+                            {% if request.user == diary.author %}
+                                <a href="javascript:void(0)" class="update_btn">수정</a>
+                            {% endif %}
+                            <a href="javascript:void(0)" class="delete delete_btn"
+                            data-uri="{% url 'diary:diary_delete' diary.diary_id  %}">삭제</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="answer_box">                    
+                    {% if diary.disclose == 'public' %}
+                        <h5 class="answer_count">{{ diary.answer_set.count }}개의 답변이 있습니다</h5>
+                    {% endif %}
+
+                    
+                    {% if diary.disclose == 'public' %}
+                    <div class="answer_write_btn">답변 입력하기</div>
+                    <form action="{% url 'diary:answer_create' diary.diary_id %}" method="post">
+                        {% csrf_token %}
+                        <textarea name="content" id="content" rows="15"></textarea>
+                        <input type="submit" value="등록" class="answer_submit">
+                    </form>
+                    {% endif %}
+
+
+                    <div class="answer_text_box">
+                        <ul class="answer_ul">
+                            {% for answer in diary.answer_set.all %}
+                                <li>
+                                    <div class="answer_ext_box">
+                                        <span>
+                                            {% if answer.author %}
+                                                {{ answer.author.username }} 
+                                            {% endif %}
+                                        </span>
+                                        <span>
+                                            {% if answer.modify_date %}
+                                            <div class="badge bg-light text-dark p-2 text-start mx-3">
+                                                <div>{{ answer.modify_date|date:"Y.m.d" }}</div>
+                                            </div>
+                                            {% else %}
+                                                {{ answer.create_date|date:"Y.m.d" }}                                                
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    
+                                    <span>{{ answer.content }}</span>
+                                    
+                                    
+                                    <div class="answer_btn_box">
+                                        {% if request.user == answer.author %}
+                                            <a href="{% url 'diary:answer_modify' answer.id diary.diary_id %}" 
+                                                class="answer_update_btn">수정</a>
+                                            <a href="#" class="answer_delete_btn"
+                                                data-uri="{% url 'diary:answer_delete' answer.id diary.diary_id  %}">삭제</a>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+{% endblock %}
+
+{% block script %}
+    <script type='text/javascript'>
+        const delete_elements = document.getElementsByClassName("delete");
+        Array.from(delete_elements).forEach(function(element) {
+            element.addEventListener('click', function() {
+                if(confirm("정말로 삭제하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                };
+            });
+        });
+
+        const recommend_elements = document.getElementsByClassName("recommend");
+        Array.from(recommend_elements).forEach(function(element) {
+            element.addEventListener('click', function() {
+                if(confirm("정말로 추천하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                };
+            });
+        });
+
+        $(document).ready(function(){
+            var year = $('.previous_day').attr('id').split('.')[0];
+            var month = $('.previous_day').attr('id').split('.')[1];
+            var day = $('.previous_day').attr('id').split('.')[2];
+            var ids2 = $('.diary_id').attr('id');
+            console.log('id2 : ', ids2)
+            var diaryListURL = '/diary/modify/'+ids2+'?year=' + year + '&month=' + month + '&day=' + (Number(day)+1);
+            $('.update_btn').on('click',function(){
+                // GET 요청 보내기
+                $.ajax({
+                    type: "GET",
+                    url: diaryListURL,
+                    success: function(response) {
+                        window.location.href = diaryListURL;
+                    },
+                    error: function(xhr, errmsg, err) {
+                        console.log('GET 요청이 실패했습니다.');
+                        console.log(xhr, errmsg, err);
+                    }
+                });
+            });
+
+            $('.answer_write_btn').on('click',function(){
+                $('.answer_box form').css('display','inline-block')
+                $(this).css('display','none')
+            })
+            if ($('.modify_date').length > 0) {
+                $('.previous_day').css('display', 'none')
+            } 
+        })
+    </script>
+{% endblock %}

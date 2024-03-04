@@ -1,0 +1,175 @@
+
+
+
+
+body {
+    margin: 0;
+}
+.login_error .errorlist li {
+    list-style: none !important;
+}
+
+.wrap {
+    padding: 10px 0;
+    box-sizing: border-box;
+}
+
+
+.login_header {
+    height: 40px;
+    overflow: hidden;
+
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+}
+.login_header .logo a img,
+.login_header .logo a,
+.login_header .logo {
+    height: 100%;
+    display: inline-block;
+}
+
+
+
+
+.login_box {
+    width: 100%;
+    margin: 60px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+    height: 70vh;
+}
+.login_title {
+    width: 400px;
+    font-size: 30px;
+    font-family: 'SCoreDream';
+    font-weight: 700;
+    color: #A2D2FF;
+
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.login_form,
+.login_title img {width: 100%;}
+
+
+.login_form form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 400px;
+    font-family: 'ScoreDream';
+    margin: auto;
+}
+.login_form form div {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.login_form form input,
+.login_form form div input {
+    border: none;
+    border-radius: 2px;
+    padding: 8px 15px;
+    box-sizing: border-box;
+    outline: none;
+    font-family: 'ScoreDream';
+    color: #333;
+    background: #efefef;
+    width: 100%;
+}
+.login_form form label,
+.login_form form div label {
+    display: none;
+}
+.login_form form .submit,
+.login_form form button {
+    border: none;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    border-radius: 2px;
+    font-size: 13px;
+    color: #fff;
+    font-family: 'ScoreDream';
+    width: 100%;
+    margin: auto;
+    margin-top: 10px;
+    background: #A2D2FF;
+    cursor: pointer;
+}
+.modify_ext {
+    width: 400px;
+    margin: auto;
+    margin-top: 10px;
+}
+.login_title_small {
+    font-size: 15px;
+    color: #555;
+}
+
+.ext_login .login_css_text {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.ext_login .login_css_text a {
+    font-size: 12px;
+    text-decoration: none;
+    color: inherit;
+    font-family: 'ScoreDream';
+}
+.id_pw_reset {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.login_error {
+    width: 100%;
+    background: #ffdfe2;
+    color: #f13f3b;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    /* border: 2px solid #f13f3b; */
+    font-size: 15px;
+    transition: all .3s linear;
+}
+
+
+
+@media (max-width: 600px) {
+    .login_header {
+        max-width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+    .modify_ext,
+    .login_form form,
+    .login_title {
+        width: 50%;
+    }
+}
+@media (max-width: 430px) {
+    .modify_ext,
+    .login_form form,
+    .login_title {
+        width: 70%;
+    }
+}
+@media (max-width: 300px) {
+    .modify_ext,
+    .login_form form,
+    .login_title {
+        width: 90%;
+    }
+}

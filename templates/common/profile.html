@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% load diary_filter %}
+{% load static %}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+<link rel="stylesheet" href="{% static 'css/common/mypage.css' %}">
+<link rel="stylesheet" href="{% static 'css/common/profile.css' %}">
+
+<main>
+    <div class="container">
+        <div class="update_profile_box">
+            <div class="profile_box">
+                {% if image_path %}
+                    <span 
+                        style="background: url({{ image_path }});background-position: center;background-size: cover;background-repeat: no-repeat;">
+                    </span>
+                {% else %}
+                    <img src="{% static 'img/common/default_image.png' %}" alt="Default Image" style="max-width: 200px; max-height: 200px;">
+                {% endif %}
+            </div>
+            
+            <div class="update_box">
+                <div id="image-preview-container">
+                    <img id="image-preview" src="#" alt="미리보기" style="display: none; max-width: 200px;">
+                </div>
+                <form method="post" action="{% url 'common:profile_update' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="profile_image" class="input-file-button">업로드</label> 
+                    <input type="file" name="profile_image" id="profile_image" style="display: none;"onchange="previewImage(event);">
+                    <button type="submit" id="update_btn" class="btn btn-primary" style="display: none;">변경하기</button>
+                </form>
+
+            </div>
+            
+        </div>
+    </div>
+</main>
+
+{% endblock %}
+
+{% block script %}
+
+<script type='text/javascript'>
+    const profileForm = document.getElementById("profileForm");
+    if (profileForm) {
+        profileForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // 폼 제출 기본 동작 방지
+            // 프로필 업데이트 후에 마이 페이지로 이동
+            window.location.href = "{% url 'common:mypage' %}";
+            // 폼을 제출
+            this.submit();
+        });
+    }
+
+    function previewImage(event) {
+        var input = event.target;
+        var preview = document.getElementById('image-preview');
+        var submitbtn = document.getElementById('update_btn');
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                submitbtn.style.display = 'inline-block';
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            preview.src = '#';
+            preview.style.display = 'none';
+            submitbtn.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% load custom_date %}
+{% load diary_filter %}
+{% load static %}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+<link rel="stylesheet" href="{% static 'css/diary/diary_list.css' %}">
+<main>
+    <div class="container">
+        
+        {% if diary_list %}
+            <ul class="list_ul">
+            {% for diary in diary_list %}
+                <li>
+                    <a href="{% url 'diary:detail' diary.diary_id %}">
+                        <span style="display: flex; gap: 30px;">
+                            <span>{{ diary_list.paginator.count|sub:diary_list.start_index|sub:forloop.counter0|add:1 }}</span>
+                            <span>{{ diary.title }}</span>
+                            {% if diary.answer_set.count > 0 %}
+                            <span class="text-danger small mx-2" style="font-size: 11px; color: red;">{{ diary.answer_set.count }}</span>
+                            {% endif %}
+                            <span>{{ diary.author.username }}</span>
+                        </span>
+                        <span>{{ diary.create_date|relative_time }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>일기를 작성해주세요~ :D</p>
+        {% endif %}
+
+        {% if diary_list %}
+            <!-- 페이징처리 시작 -->
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" href="?page=1"><<</a>
+                </li>
+                <!-- 이전페이지 -->
+                {% if diary_list.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ diary_list.previous_page_number }}"><</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#"><</a>
+                </li>
+                {% endif %}
+                <!-- 페이지리스트 -->
+                {% for page_number in diary_list.paginator.page_range %}
+                {% if page_number == diary_list.number %}
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+                <!-- 다음페이지 -->
+                {% if diary_list.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ diary_list.next_page_number }}">></a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">></a>
+                </li>
+                {% endif %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">>></a>
+                </li>
+            </ul>
+            <!-- 페이징처리 끝 -->
+        
+        {% endif %} 
+        <a href="{% url 'diary:diary_create' %}" class="create_diary_btn">일기 적기</a>
+    </div>
+</main>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function(){
+        const urlParams = new URL(location.href).searchParams;
+        const year = urlParams.get('year');
+        const month = urlParams.get('month');
+        const day = urlParams.get('day');
+
+        var diaryListURL = '/diary/create/?year=' + year + '&month=' + month + '&day=' + (Number(day)+1);
+        $('.create_diary_btn').on('click',function(){
+           
+
+            // GET 요청 보내기
+            $.ajax({
+                type: "GET",
+                url: diaryListURL,
+                success: function(response) {
+                    window.location.href = diaryListURL;
+
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log('GET 요청이 실패했습니다.');
+                    console.log(xhr, errmsg, err);
+                }
+            });
+        });
+    })
+</script>
+{% endblock %}

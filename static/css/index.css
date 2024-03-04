@@ -1,0 +1,202 @@
+.calendar {
+    width: 100%;
+    margin: auto;
+    padding-bottom: 50px;
+}
+
+.calendar_header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.ym-wrapper {
+    font-size: 35px;
+}
+
+.calendar_nav {
+    display: flex;
+    flex-grow: 0;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: 500;
+}
+
+.nav-btn {
+    width: 28px;
+    height: 30px;
+    border: none;
+    font-size: 16px;
+    line-height: 34px;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.go-today {
+    width: 80%;
+}
+
+.calendar_main{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.days {
+    display: flex;
+    margin: 25px 0 10px;
+}
+
+.day {
+    width: calc(100% / 7);
+    text-align: center;
+    transition: all .3s;
+}
+
+
+.dates {
+    display: grid;
+    border: 1px solid #333333;
+    grid-template-columns: repeat(7,1fr);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.date {
+    cursor: pointer;
+    width: 100%;
+    padding: 50px 50px;
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px solid #333333;
+    transition: all .3s;
+}
+
+.day:nth-child(7n + 1),
+.date:nth-child(7n + 1) {
+    color: #D13E3E;
+}
+
+.day:nth-child(7n),
+.date:nth-child(7n) {
+    color: #396EE2;
+}
+
+.other {
+    color: rgba(88, 88, 88, 0.315) !important;
+}
+
+.today {
+    position: relative;
+    background-color: #ff1c1c96;
+}
+
+.selected{
+    background-color: black;
+    color: #ffffff !important;
+}
+
+
+
+
+/* ////////////////////////////////////////// */
+
+.resv-wrapper {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    display: flex;
+    max-width: 1000px;
+    background: #fff;
+    padding: 20px 30px;
+    box-sizing: border-box;
+    justify-content: center;
+    border: 3px solid #ddd;
+    border-radius: 3px;
+}
+.resv-bg {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 50%;
+}
+.resv-close {
+    width: 30px;
+    border: none;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    font-size: 10px;
+    font-family: 'ScoreDream';
+    font-weight: 600;
+    background: #ddd;
+    color: #333;
+    cursor: pointer;
+}
+.resv_info {
+    display: flex;
+    flex-direction: column;
+    /* width: 50%; */
+    align-items: center;
+}
+.resv-list {
+    width: 50%;
+    font-size: 14px;
+}
+.resv-list p {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+.resv-list p::before {
+    content: "";
+    display: flex;
+    width: 3px;
+    height: 19px;
+    background-color: #333;
+    border-radius: 10px;
+}
+
+.resv_btn.purchase {
+    padding: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    font-family: 'SCoreDream';
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 30px;
+}
+
+.click_date {
+    background-color: #333;
+    color: #fff;
+}
+
+
+
+@media (max-width: 1000px) {
+    .dates {
+        grid-template-columns: repeat(5,1fr);
+    }
+    .days {
+        display: none;
+    }
+}
+
+@media (max-width: 700px) {
+    .dates {grid-template-columns: repeat(auto-fit, minmax(100px,1fr));}
+    .date {padding: 30px 30px;}
+    .ym-wrapper {font-size: 25px;}
+    .nav-btn {height: auto; font-size: 14px;}
+}
+
+@media (max-width: 500px) {
+    .dates {grid-template-columns: repeat(auto-fit, minmax(50px,1fr));}
+    .date {padding: 10px 10px;}
+}

@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+<link rel="stylesheet" href="{% static 'css/diary/diary_form.css' %}">
+<script src="{% static 'js/diary/diary_form.js' %}"></script>
+<script src="{% static 'js/diary/diary_modify.js' %}"></script>
+<main>
+    <div class="container">
+        <h5 class="main_title">일기 수정</h5>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- 오류표시 Start -->
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for field in form %}
+                {% if field.errors %}
+                <div>
+                    <strong>{{ field.label }}</strong>
+                    {{ field.errors }}
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            <!-- 오류표시 End -->
+
+            <div class="ext_box">
+                <input type="hidden" name="create_date" id="create_date" class="create_date" value="">
+
+                <div class="weather_box">
+                    <label for="weather" class="form_label">날씨</label>
+                    <input autocomplete='off' placeholder="날씨" type="text" name="weather" id="weather" class="from_control" value="{{ form.weather.value|default_if_none:'' }}">
+                    <div class="weather_option_bar_box">
+                        <div class="weather_option">맑음</div>
+                        <div class="weather_option">흐림</div>
+                        <div class="weather_option">비</div>
+                        <div class="weather_option">눈</div>
+                        <div class="weather_option">우박</div>
+                        <div class="weather_option">폭풍</div>
+                        <div class="weather_option">무지개</div>
+                        <div class="weather_option">선선</div>
+                        <div class="weather_option">바람</div>
+                        <div class="weather_option">쌀쌀</div>
+                        <div class="weather_option">안개</div>
+                        <div class="weather_option">더움</div>
+                    </div>
+                </div>
+                <div class="mood_box">
+                    <label for="mood" class="form_label">기분</label>
+                    <input autocomplete='off' placeholder="기분" type="text" name="mood" id="mood" class="from_control" value="{{ form.mood.value|default_if_none:'' }}">
+                    <div class="mood_option_bar_box">
+                        <div class="mood_option">행복</div>
+                        <div class="mood_option">사랑</div>
+                        <div class="mood_option">상쾌</div>
+                        <div class="mood_option">설램</div>
+                        <div class="mood_option">황홀</div>
+                        <div class="mood_option">긴장</div>
+                        <div class="mood_option">슬픔</div>
+                        <div class="mood_option">화남</div>
+                        <div class="mood_option">우울</div>
+                        <div class="mood_option">그리움</div>
+                        <div class="mood_option">그냥</div>
+                        <div class="mood_option">이별</div>
+                        <div class="mood_option">울음</div>
+                        <div class="mood_option">고독</div>
+                        <div class="mood_option">답답</div>
+                        <div class="mood_option">힘듦</div>
+                        <div class="mood_option">바쁨</div>
+                        <div class="mood_option">피곤</div>
+                        <div class="mood_option">아픔</div>
+                        <div class="mood_option">불안</div>
+                        <div class="mood_option">외로움</div>
+                    </div>
+                </div>
+            </div>
+            <div class="middle_line"></div>
+            <div class="main_box">
+                <div class="title_box">
+                    <label for="title" class="form_label">제목</label>
+                    <input placeholder="제목" type="text" name="title" id="title" class="from_control" value="{{ form.title.value|default_if_none:'' }}">
+                </div>
+                <div class="content_box">
+                    <label for="content" class="form_label">내용</label>
+                    <textarea placeholder="내용" name="content" id="content" class="from_control">{{ form.content.value|default_if_none:'' }}</textarea>
+                </div>
+            </div>
+            <div class="middle_line"></div>
+            <div class="after_box">
+                <div class="reflection_box">
+                    <label for="reflection" class="form_label">오늘의 반성</label>
+                    <textarea name="reflection" id="reflection" rows="10">{{ form.reflection.value|default_if_none:'' }}</textarea>
+                </div>
+                <div class="praise_box">
+                    <label for="praise" class="form_label">오늘의 칭찬</label>
+                    <textarea name="praise" id="praise" rows="10">{{ form.praise.value|default_if_none:'' }}</textarea>
+                </div>
+            </div>
+            <div class="after_box">
+                {% if form.photo.value %}
+                    <div style='background:url(/media/{{ form.photo.value }}); background-size:cover; background-position: center;' alt="이미지" class="photo_value_box"></div>
+                    <input type="checkbox" name="img_delete" value="삭제" id="img_delete">
+                    <label for="img_delete" class="img_delete">이미지 삭제</label>
+                {% else %}
+                    <div></div>
+                {% endif %}
+                <div id="image-preview-container"></div>
+                <div class="photo_box">
+                    <label for="photo" class="input-file-button">업로드</label> 
+                    <input type="file" name="photo" id="photo" style="display: none;"onchange="previewImage(event);">
+                </div>
+            </div>
+            <div class="disclose_box ifTrue_box">
+                <input type="hidden" class="ifTrueValue" value="{{ form.disclose.value }}"></input>
+                <input type="radio" name="disclose" id="private" value="private">
+                <label for="private" class="private disclose_label">비공개</label><br>
+
+                <input type="radio" name="disclose" id="public" value="public">
+                <label for="public" class="public disclose_label">공개</label><br>
+            </div>
+            <button type="submit" class="btn btn-primary" id="submit_create_diary">저장하기</button>
+        </form>
+    </div>
+</main>
+{% endblock %}
+
+
+
+{% block script %}
+<script>
+    
+    $(document).ready(function(){
+        const urlParams = new URL(location.href).searchParams;
+        const year = urlParams.get('year');
+        const month = urlParams.get('month');
+        const day = urlParams.get('day');
+        const create_date = year + '-' + month + '-' + day;
+        console.log("create_date : ", create_date)
+        $('#create_date').val(create_date);
+        if (!year) {
+            alert('잘못된 링크입니다 다시 들어와주세요~');
+            history.back(-1);
+        }
+        
+
+        $('input[name=weather]').on('click',function(){
+            $('.weather_option_bar_box').css('display', 'flex')
+        })
+        $('.weather_option').on('click',function(){
+            var weather_val = $(this).text()
+            $('#weather').val(weather_val)
+        })
+        $('input[name=mood]').on('click',function(){
+            $('.mood_option_bar_box').css('display', 'flex')
+        })
+        $('.mood_option').on('click',function(){
+            var mood_val = $(this).text()
+            $('#mood').val(mood_val)
+        })
+
+        $(document).on('click', function(event) {
+            // 바탕을 클릭했을 때의 동작
+            if (!$(event.target).closest('input[name=weather]').length) {
+                $('.weather_option_bar_box').css('display', 'none');
+            }
+            if (!$(event.target).closest('input[name=mood]').length) {
+                $('.mood_option_bar_box').css('display', 'none');
+            }
+        });
+
+        var value = $('.ifTrueValue').val();
+        var inputList = $('input[name=disclose]');
+        for (var i = 0; i < inputList.length; i++) {
+            var input_id = inputList.eq(i).attr('id');
+            if(input_id == value) {
+                $('#'+input_id).click();
+            }
+        }
+
+        $('.img_delete').on('click',function(){
+            $('.photo_value_box').css({display: 'none'})
+            $(this).attr('id', 'deleteTrue');
+        })
+        
+    })
+
+</script>
+{% endblock %}

@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+
+{% load custom_date %}
+{% load diary_filter %}
+{% load static %}
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+<link rel="stylesheet" href="{% static 'css/common/mypage.css' %}">
+<main>
+    <div class="container">
+        <div class="my_page_box">
+            <div class="mycontent_update_delete_box">
+                <div class="myprofile_box">
+                    <div class="profile_box">
+                        {% if image_path %}
+                            <span 
+                                style="background: url({{ image_path }});background-position: center;background-size: cover;background-repeat: no-repeat;">
+                            </span>
+                        {% else %}
+                            <img src="{% static 'img/common/default_image.png' %}" alt="Default Image" style="max-width: 200px; max-height: 200px;">
+                        {% endif %}
+                    </div>
+                    <div class="profile_name">{{ user.first_name }}{{ user.last_name }} <span style="font-size: 13px;">({{ user.username }})</span></div>
+                </div>
+
+                <div class="update_profile_box">
+                    <div class="update_div">
+                        <a href="{% url 'common:profile' %}">프로필 이미지 변경</a>
+                        <a href="{% url 'common:update' %}">회원 정보 수정</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border_line"></div>
+
+
+            <div class="user_diary_list_box">
+                <div class="user_diary_list_inner_box">
+                    <div class="udl_title_box">작성한 일기</div>
+                    {% if page_diary_list1 %}
+                    <ul class="user_diary_list_ul">
+                        {% for diary in page_diary_list1 %}
+                        <li>
+                            <a href="{% url 'diary:detail' diary.diary_id %}">
+                                <span class="diary-id">{{ page_diary_list1.paginator.count|sub:page_diary_list1.start_index|sub:forloop.counter0|add:1 }}</span>
+                                <div style="display: flex; gap: 30px;">
+                                    <span>{{ diary.title }}</span>
+                                    {% if diary.answer_set.count > 0 %}
+                                        <span class="text-danger small mx-2" style="font-size: 11px; color: red;">{{ diary.answer_set.count }}</span>
+                                    {% endif %}
+                                    {% if diary.voter.count > 0 %}
+                                        <span class="text-danger small mx-2" style="font-size: 11px; color: red;">{{ diary.voter.count }}</span>
+                                    {% endif %}
+                                </div>
+                                <div style="display: flex; gap: 30px;">
+                                    <span>{{ diary.author.username }}</span>
+                                    <span>{{ diary.create_date|relative_time  }}</span>
+
+                                </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <span>공개된 일기가 없습니다</span>
+                    {% endif %}
+
+                    {% if page_diary_list1 %}
+                        <!-- 페이징처리 시작 -->
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1"><<</a>
+                            </li>
+                            <!-- 이전페이지 -->
+                            {% if page_diary_list1.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_diary_list1.previous_page_number }}"><</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" href="#"><</a>
+                            </li>
+                            {% endif %}
+                            <!-- 페이지리스트 -->
+                            {% for page_number in page_diary_list1.paginator.page_range %}
+                            {% if page_number == page_diary_list1.number %}
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                            <!-- 다음페이지 -->
+                            {% if page_diary_list1.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_diary_list1.next_page_number }}">></a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">></a>
+                            </li>
+                            {% endif %}
+                            <li class="page-item disabled">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">>></a>
+                            </li>
+                        </ul>
+                        <!-- 페이징처리 끝 -->
+                    {% endif %} 
+                </div>
+                <div class="user_diary_list_inner_box">
+                    <div class="udl_title_box">댓글쓴 일기</div>
+                    {% if page_comment_diary %}
+                    <ul class="user_diary_list_ul">
+                        {% for diary in page_comment_diary %}
+                        <li>
+                            <a href="{% url 'diary:detail' diary.diary_id %}">
+                                <span class="diary-id">{{ page_comment_diary.paginator.count|sub:page_comment_diary.start_index|sub:forloop.counter0|add:1 }}</span>
+                                <div style="display: flex; gap: 30px;">
+                                    <span>{{ diary.title }}</span>
+                                    {% if diary.answer_set.count > 0 %}
+                                        <span class="text-danger small mx-2" style="font-size: 11px; color: red;">{{ diary.answer_set.count }}</span>
+                                    {% endif %}
+                                    {% if diary.voter.count > 0 %}
+                                        <span class="text-danger small mx-2" style="font-size: 11px; color: red;">{{ diary.voter.count }}</span>
+                                    {% endif %}
+                                </div>
+                                <div style="display: flex; gap: 30px;">
+                                    <span>{{ diary.author.username }}</span>
+                                    <span>{{ diary.create_date|relative_time  }}</span>
+                                </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <span>작성하신 댓글이 없습니다</span>
+                    {% endif %}
+
+                    
+                    {% if page_comment_diary %}
+                        <!-- 페이징처리 시작 -->
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1"><<</a>
+                            </li>
+                            <!-- 이전페이지 -->
+                            {% if page_comment_diary.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_comment_diary.previous_page_number }}"><</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" href="#"><</a>
+                            </li>
+                            {% endif %}
+                            <!-- 페이지리스트 -->
+                            {% for page_number in page_comment_diary.paginator.page_range %}
+                            {% if page_number == page_comment_diary.number %}
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                            <!-- 다음페이지 -->
+                            {% if page_comment_diary.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_comment_diary.next_page_number }}">></a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">></a>
+                            </li>
+                            {% endif %}
+                            <li class="page-item disabled">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">>></a>
+                            </li>
+                        </ul>
+                        <!-- 페이징처리 끝 -->
+                    {% endif %} 
+                </div>
+                <div class="user_diary_list_inner_box">
+                    <div class="udl_title_box">추천한 일기</div>
+                    {% if page_user_recommend_diary %}
+                    <ul class="user_diary_list_ul">
+                        {% for diary in page_user_recommend_diary %}
+                        <li>
+                            <a href="{% url 'diary:detail' diary.diary_id %}">
+                                <span class="diary-id">{{ page_user_recommend_diary.paginator.count|sub:page_user_recommend_diary.start_index|sub:forloop.counter0|add:1 }}</span>
+                                <div style="display: flex; gap: 30px;">
+                                    <span>{{ diary.title }}</span>
+                                    {% if diary.answer_set.count > 0 %}
+                                        <span class="text-danger small mx-2" style="font-size: 11px; color: red;">{{ diary.answer_set.count }}</span>
+                                    {% endif %}
+                                    {% if diary.voter.count > 0 %}
+                                        <span class="text-danger small mx-2" style="font-size: 11px; color: red;">{{ diary.voter.count }}</span>
+                                    {% endif %}
+                                </div>
+                                <div style="display: flex; gap: 30px;">
+                                    <span>{{ diary.author.username }}</span>
+                                    <span>{{ diary.create_date|relative_time  }}</span>
+
+                                </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <span>추천하신 일기가 없습니다</span>
+                    {% endif %}
+
+                    
+                    {% if page_user_recommend_diary %}
+                        <!-- 페이징처리 시작 -->
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1"><<</a>
+                            </li>
+                            <!-- 이전페이지 -->
+                            {% if page_user_recommend_diary.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_user_recommend_diary.previous_page_number }}"><</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" href="#"><</a>
+                            </li>
+                            {% endif %}
+                            <!-- 페이지리스트 -->
+                            {% for page_number in page_user_recommend_diary.paginator.page_range %}
+                            {% if page_number == page_user_recommend_diary.number %}
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                            <!-- 다음페이지 -->
+                            {% if page_user_recommend_diary.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_user_recommend_diary.next_page_number }}">></a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">></a>
+                            </li>
+                            {% endif %}
+                            <li class="page-item disabled">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">>></a>
+                            </li>
+                        </ul>
+                        <!-- 페이징처리 끝 -->
+                    {% endif %} 
+                </div>
+                <div class="user_diary_list_inner_box">
+                    <div class="udl_title_box">추천 받은 일기</div>
+                    {% if page_recommend_diary %}
+                    <ul class="user_diary_list_ul">
+                        {% for diary in page_recommend_diary %}
+                        <li>
+                            <a href="{% url 'diary:detail' diary.diary_id %}">
+                                <span class="diary-id">{{ page_recommend_diary.paginator.count|sub:page_recommend_diary.start_index|sub:forloop.counter0|add:1 }}</span>
+                                <div style="display: flex; gap: 30px;">
+                                    <span>{{ diary.title }}</span>
+                                    {% if diary.answer_set.count > 0 %}
+                                        <span class="text-danger small mx-2" style="font-size: 11px; color: red;">{{ diary.answer_set.count }}</span>
+                                    {% endif %}
+                                    {% if diary.voter.count > 0 %}
+                                        <span class="text-danger small mx-2" style="font-size: 11px; color: red;">{{ diary.voter.count }}</span>
+                                    {% endif %}
+                                </div>
+                                <div style="display: flex; gap: 30px;">
+                                    <span>{{ diary.author.username }}</span>
+                                    <span>{{ diary.create_date|relative_time  }}</span>
+
+                                </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <span>공개된 일기 중 추천 받으신 일기가 없습니다</span>
+                    {% endif %}
+
+                    
+                    
+                    {% if page_recommend_diary %}
+                        <!-- 페이징처리 시작 -->
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1"><<</a>
+                            </li>
+                            <!-- 이전페이지 -->
+                            {% if page_recommend_diary.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_recommend_diary.previous_page_number }}"><</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" href="#"><</a>
+                            </li>
+                            {% endif %}
+                            <!-- 페이지리스트 -->
+                            {% for page_number in page_recommend_diary.paginator.page_range %}
+                            {% if page_number == page_recommend_diary.number %}
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                            <!-- 다음페이지 -->
+                            {% if page_recommend_diary.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_recommend_diary.next_page_number }}">></a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">></a>
+                            </li>
+                            {% endif %}
+                            <li class="page-item disabled">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">>></a>
+                            </li>
+                        </ul>
+                        <!-- 페이징처리 끝 -->
+                    {% endif %} 
+                </div>
+            </div>
+
+            
+            <!-- <form id="delete" action="{% url 'common:delete' %}" method="post">
+                {% csrf_token %}
+                <button type="submit">회원탈퇴</button>
+                
+                <a href="{% url 'common:delete' %}" id="delete">회원탈퇴</a>
+            </form> -->
+        </div>
+    </div>
+</main>
+{% endblock %}

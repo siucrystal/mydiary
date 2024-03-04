@@ -1,0 +1,295 @@
+body {
+    margin: 0;
+    font-family: 'ScoreDream';
+    color: #333;
+}
+/* .line {
+    width: 1px;
+    height: 80%;
+    background-color: #ddd;
+} */
+
+.main_title {
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+.middle_line {
+    width: 80%;
+    height: 1px;
+    background-color: #ddd;
+    margin: auto;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.ext_box {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+}
+/* .ext_box label {display: none;} */
+.date_box {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 10px;
+}
+.date_inner_box {
+    position: relative;
+}
+.date_box .from_ul {
+    overflow: hidden;
+    width: auto;
+    border-bottom: 2px solid #ddd;
+    font-size: 14px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    transform: translate(0%, 5px);
+
+    background: #fff;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    flex-direction: column;
+    padding: 10px 0;
+    display: none;
+    height: 250px;
+    overflow-y: auto;
+    cursor: pointer;
+}
+.from_ul li {
+    padding: 5px 20px;
+}
+.from_ul li:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+.date_inner_box .date_text {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 10px;
+    padding: 7px 10px;
+    box-sizing: border-box;
+}
+.date_inner_box .date_text span {font-size: 15px;}
+
+.mood_box,
+.weather_box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+#mood,
+#weather {
+    width: 100px;
+    padding: 10px;
+    box-sizing: border-box;
+    /* border-radius: 10px; */
+    border-bottom: 2px solid transparent;
+    /* border-left: 1px solid #ddd !important; */
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    outline: none;
+    font-family: 'ScoreDream';
+    background-color: transparent;
+    border-radius: 5px;
+}
+
+.mood_option_bar_box,
+.weather_option_bar_box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(0%, 15%);
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 10px 0;
+    box-sizing: border-box;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 99;
+    border-radius: 10px;
+    height: 300px;
+    overflow-y: auto;
+}
+.mood_option,
+.weather_option {
+    padding: 5px 30px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.mood_option:hover,
+.weather_option:hover {
+    background-color: #A2D2FF;
+}
+
+.mood_option_bar_box::-webkit-scrollbar ,
+.weather_option_bar_box::-webkit-scrollbar {
+    width: 5px;
+}
+.mood_option_bar_box::-webkit-scrollbar-thumb ,
+.weather_option_bar_box::-webkit-scrollbar-thumb {
+    background-color: #333;
+}
+.mood_option_bar_box::-webkit-scrollbar-track ,
+.weather_option_bar_box::-webkit-scrollbar-track {
+    background-color: #ddd;
+}
+
+
+
+
+
+/* main_box */
+.main_box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.main_box label {
+    display: none;
+}
+.content_box textarea,
+.title_box input {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ddd;
+    outline: none;
+    border-radius: 5px;
+    font-family: 'ScoreDream';
+    background-color: transparent;
+}
+.reflection_box textarea,
+.praise_box textarea {
+    padding: 10px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ddd;
+    outline: none;
+    border-radius: 5px;
+    font-family: 'ScoreDream';
+    background-color: transparent;
+    max-width: 100%;
+    min-width: 100%;
+    width: 100%;
+    height: 100px;
+    max-height: 100%;
+    min-height: 100%;
+}
+.content_box textarea {height: 300px;}
+
+.reflection_box,
+.praise_box {position: relative; width: 50%;}
+.reflection_box label,
+.praise_box label {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: #fff;
+    padding: 0 10px;
+    box-sizing: border-box;
+    font-weight: 500;
+}
+
+
+.btn {
+    width: 50%;
+    margin: 40px auto;
+    border: none;
+    padding: 10px 0;
+    box-sizing: border-box;
+    border-radius: 10px;
+    background: #A2D2FF;
+    font-size: 15px;
+    font-family: 'ScoreDream';
+    font-weight: 500;
+    cursor: pointer;
+}
+
+
+
+
+
+.after_box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.photo_box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+.input-file-button{
+    padding: 6px 25px;
+    background-color:#A2D2FF;
+    border-radius: 4px;
+    /* color: white; */
+    cursor: pointer;
+}
+.photo_value_box {
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+}
+.disclose_box{
+    display: flex;
+    gap: 20px;
+}
+#img_delete,
+.disclose_box input {
+    display: none;
+}
+.img_delete,
+.disclose_label {
+    padding: 10px 20px;
+    box-sizing: border-box;
+    border-radius: 3px;
+    background-color: #ddd;
+    color: #333;
+    cursor: pointer;
+}
+.img_delete {
+    background-color: #A2D2FF;
+    border: none;
+    font-family: 'ScoreDream';
+    font-weight: 500;
+}
+
+input[name="disclose"]:checked + label {
+    background-color: #A2D2FF; 
+    font-weight: 500;
+}
+
+
+
+@media (max-width:700px) {
+    .after_box {
+        flex-direction: column;
+    }
+    .reflection_box, .praise_box {
+        width: 100%;
+    }
+}
+@media (max-width: 400px) {
+    .btn {width: 100%;}
+    .disclose_box {
+        justify-content: center;
+    }
+}
